@@ -119,13 +119,19 @@ if search != 'None':
 
 if list != 'None':
     timestr = time.strftime("%Y%m%d_%H%M%S")
-    format = raw_input("Do you want a single outfile or multiple fasta files for each sting in the list?(Type 'single' or 'multiple')")
+    format = None
+    while format != "single" or format != "multiple":
+        format = raw_input(
+            "Do you want a single outfile or multiple fasta files for each sting in the list?(Type 'single' or 'multiple')\n").lower()
+        if format == "single" or format == "multiple":
+            break
     name_list = []
     with open(list, 'rU') as file:
         for line in file:
-            name = line.split('\n')[0]
-            name_list.append(name)
-
+            if len(line.split()) != 0:
+                name = line.split('\n')[0]
+                name_list.append(name)
+		
     with tqdm.tqdm(range(len(name_list)), desc='Searching ') as pbar:
         for i in range(len(name_list)):
             search = name_list[i]
