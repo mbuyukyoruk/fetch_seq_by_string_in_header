@@ -2,8 +2,6 @@
 
 Author: Murat Buyukyoruk
 
-Associated lab: Wiedenheft lab
-
 # fetch_seq_by_string_in_header help:
 
 This script is developed to fetch sequences from a multifasta file by performing string search in the header. 
@@ -13,22 +11,23 @@ SeqIO package from Bio is required to fetch flank sequences. Additionally, tqdm 
 
 fetch_seq_by_string_in_header dependencies:
 
-    Bio module and SeqIO available in this package          refer to https://biopython.org/wiki/Download
-    tqdm                                                    refer to https://pypi.org/project/tqdm/
+Bio module and SeqIO available in this package          refer to https://biopython.org/wiki/Download
+
+tqdm                                                    refer to https://pypi.org/project/tqdm/
 	        
 Syntax:
 
   # Method 1: Single search
     
-        python fetch_seq_by_string_in_header.py -i demo.fasta -s 'vibrio sp.'
+    python fetch_seq_by_string_in_header.py -i demo.fasta -s 'vibrio sp.'
         
-        OR
+OR
 
-        python fetch_seq_by_string_in_header.py -i demo.fasta -s vibrio
+    python fetch_seq_by_string_in_header.py -i demo.fasta -s vibrio
  
   # Method 2: List search
-    
-        python fetch_seq_by_string_in_header.py -i demo.fasta -l demo_list.txt    
+
+    python fetch_seq_by_string_in_header.py -i demo.fasta -l demo_list.txt    
         
 # Syntax Notes:
 
@@ -49,7 +48,7 @@ Also applied for single search option except with strings containing space. Type
 WARNING: 
 --------
 
-If you use the list search option and create a single output file, duplications in provided list will generated duplicated accession entries. (i.e. vibrio will also get vibrio sp and will generate duplicates if the list also contains vibrio sp). Use remove_dub_by_acc script to avoid any duplications for downsteam steps (link: https://github.com/WiedenheftLab/remove_dub_by_acc)	
+If you use the list search option and create a single output file, duplications in provided list will generated duplicated accession entries. (i.e. vibrio will also get vibrio sp and will generate duplicates if the list also contains vibrio sp). Use [remove_dub_by_acc](https://github.com/mbuyukyoruk/remove_dub_by_acc) script to avoid any duplications for downstream steps. 	
 	
 Input Paramaters (REQUIRED):
 ----------------------------

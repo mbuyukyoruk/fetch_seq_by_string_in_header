@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import argparse
 import sys
 import os
@@ -10,21 +8,22 @@ import time
 
 try:
     from Bio import SeqIO
-except ImportError, e:
-    print "SeqIO module is not installed! Please install SeqIO and try again."
+except:
+    print("SeqIO module is not installed! Please install SeqIO and try again.")
     sys.exit()
 
 try:
     import tqdm
-except ImportError, e:
-    print "tqdm module is not installed! Please install tqdm and try again."
+except:
+    print("tqdm module is not installed! Please install tqdm and try again.")
     sys.exit()
 parser = argparse.ArgumentParser(prog='python fetch_seq_by_string_in_header.py',
       formatter_class=argparse.RawDescriptionHelpFormatter,
       epilog=textwrap.dedent('''\
 
-      	Author: Murat Buyukyoruk
-      	Associated lab: Wiedenheft lab
+# fetch_seq_by_string_in_header
+
+Author: Murat Buyukyoruk
 
         fetch_seq_by_string_in_header help:
 
@@ -32,10 +31,11 @@ This script is developed to fetch sequences from a multifasta file by performing
 
 SeqIO package from Bio is required to fetch flank sequences. Additionally, tqdm is required to provide a progress bar since some multifasta files can contain long and many sequences.
         
-
 fetch_seq_by_string_in_header dependencies:
-        Bio module and SeqIO available in this package          refer to https://biopython.org/wiki/Download
-        tqdm                                                    refer to https://pypi.org/project/tqdm/
+
+Bio module and SeqIO available in this package          refer to https://biopython.org/wiki/Download
+
+tqdm                                                    refer to https://pypi.org/project/tqdm/
 	        
 Syntax:
     Method 1: Single search
@@ -66,7 +66,7 @@ Allowed string format examples for list search (see provided demo_list.txt):
 
 Also applied for single search option except with string contain space. Type with quotation mark instead (i.e. 'vibrio sp.' or 'vibrio sp' or 'Vibrio sp' etc)	
 	
-WARNING: if you use the list search option and create a single output file, duplications in provided list will generated duplicated accession entries. (i.e. vibrio will also get vibrio sp and will generate duplicates if the list also contains vibrio sp). Use remove_dub_by_acc script to avoid any duplications for downsteam steps (link: https://github.com/WiedenheftLab/remove_dub_by_acc)	
+WARNING: if you use the list search option and create a single output file, duplications in provided list will generated duplicated accession entries. (i.e. vibrio will also get vibrio sp and will generate duplicates if the list also contains vibrio sp). Use remove_dub_by_acc script to avoid any duplications for downsteam steps (link: https://github.com/mbuyukyoruk/remove_dub_by_acc)	
 	
 Input Paramaters (REQUIRED):
 ----------------------------
@@ -98,14 +98,14 @@ search = results.string
 list = results.list
 
 if search == "None" and list == "None":
-    print "Please specify a method. (-l for list of strings to be searched or -s to specify single string search.)"
+    print("Please specify a method. (-l for list of strings to be searched or -s to specify single string search.)")
     sys.exit()
 
 if search != 'None':
     out = filename.split('.')[0] + "_" + search.replace(" ","_").replace(".","").capitalize() + "." + filename.split('.')[1]
     os.system('> ' + out)
 
-    proc = subprocess.Popen("grep -c '>' " + filename, shell=True, stdout=subprocess.PIPE, )
+    proc = subprocess.Popen("grep -c '>' " + filename, shell=True, stdout=subprocess.PIPE, text=True)
     length = int(proc.communicate()[0].split('\n')[0])
 
     with tqdm.tqdm(range(length), desc = 'Fetching...' ) as pbar:
@@ -114,19 +114,19 @@ if search != 'None':
             if search.lower() in record.description.lower() or search.lower().replace(" ","_") in record.description.lower() or search.lower().replace("_", " ") in record.description.lower():
                 f = open(out, 'a')
                 sys.stdout = f
-                print '>' + record.description
-                print re.sub("(.{60})", "\\1\n", str(record.seq), 0, re.DOTALL)
+                print('>' + record.description)
+                print(re.sub("(.{60})", "\\1\n", str(record.seq), 0, re.DOTALL))
 
 if list != 'None':
     timestr = time.strftime("%Y%m%d_%H%M%S")
     format = None
     while format != "single" or format != "multiple":
-        format = raw_input(
+        format = input(
             "Do you want a single outfile or multiple fasta files for each sting in the list?(Type 'single' or 'multiple')\n").lower()
         if format == "single" or format == "multiple":
             break
     name_list = []
-    with open(list, 'rU') as file:
+    with open(list, 'r') as file:
         for line in file:
             if len(line.split()) != 0:
                 name = line.split('\n')[0]
@@ -144,12 +144,12 @@ if list != 'None':
                 out = filename.split('.')[0] + "_" + search.replace(" ","_").replace(".","").capitalize() + "." + filename.split('.')[1]
                 os.system('> ' + out)
 
-            proc = subprocess.Popen("grep -c '>' " + filename, shell=True, stdout=subprocess.PIPE, )
+            proc = subprocess.Popen("grep -c '>' " + filename, shell=True, stdout=subprocess.PIPE, text=True)
             length = int(proc.communicate()[0].split('\n')[0])
 
             for record in SeqIO.parse(filename, "fasta"):
                 if search.lower() in record.description.lower() or search.lower().replace(" ","_") in record.description.lower() or search.lower().replace("_"," ") in record.description.lower():
                     f = open(out, 'a')
                     sys.stdout = f
-                    print '>' + record.description
-                    print re.sub("(.{60})", "\\1\n", str(record.seq), 0, re.DOTALL)
+                    print('>' + record.description)
+                    print(re.sub("(.{60})", "\\1\n", str(record.seq), 0, re.DOTALL))
